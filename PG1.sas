@@ -23,3 +23,14 @@ proc sort data=pg1.class_test3 out=class_test3_clean nodupkey dupout=class_test3
 	by _all_;
 run;
 
+data cars_avg;
+	format mpg_mean 5.2;
+	set sashelp.cars;
+	mpg_mean = mean(mpg_city, mpg_highway);
+run;
+
+data storm_avg;
+	set pg1.storm_range;
+	wind_avg = mean(of wind1-wind4);
+	*wind_avg = mean(of wind:);
+run;
