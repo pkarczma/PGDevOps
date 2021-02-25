@@ -124,8 +124,61 @@ data doLoop;
 run;
 
 data doWhile;
+	i=1;
 	do while(i <= 10);
 		rand = rand("integer", 1, 100);
 		output;
+		i=i+1;
 	end;
+run;
+
+data doUntil;
+	i=1;
+	do until(i > 10);
+		rand = rand("integer", 1, 100);
+		output;
+		i=i+1;
+	end;
+run;
+
+data doList;
+	set sashelp.class;
+	do month="Jan", "Feb", "Mar";
+		rand = rand("integer", 1, 10);
+		output;
+	end;
+run;
+
+/* Transpose columns */
+proc transpose data=sashelp.class out=classT;
+	id name;
+	var Height Weight;
+run;
+
+proc sort data=sashelp.class out=classS;
+	by Age;
+run;
+
+proc transpose data=classS out=classT;
+	id name;
+	var Height Weight;
+	by Age;
+run;
+
+proc transpose data=pg2.storm_top4_narrow out=storm_top4_wide(drop=_Name_) prefix=Wind;
+	id WindRank;
+	var WindMPH;
+	by Season Basin Name;
+run;
+
+proc transpose data=pg2.storm_top4_wide out=storm_top4_narrow(rename=(Col1=WindMPH)) name=WindRank;
+	var Wind1-Wind4;
+	by Season Basin Name;
+run;
+
+/* 7-24 ex. 5 */
+proc transpose data=pg2.np_2016camping out=work.camping2016_t(drop=_Name_);
+	id CampType;
+	var CampCount;
+	by ParkName;
 run;
