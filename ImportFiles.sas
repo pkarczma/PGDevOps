@@ -52,3 +52,33 @@ data pracownicy;
 	imie = propcase(imie);
 	drop id2 x;
 run;
+
+data script;
+	infile "/opt/sas/Workshop/scripts/lesson4_practice3.sh";
+	/* Move buffer to '-' sign */
+	*input @'-' a :$100.;
+	/* Read full line if it starts with '#' */
+	input @'#';
+	x = _infile_;
+	/* Find word 'back' in each line */
+	backup = find(x, "back");
+run;
+
+data logfile;
+	infile "/opt/sas/Workshop/danePGDevOps/PD3/SASApp_STPServer_2020-01-28_sasapp_18318.log";
+	input @"WARN";
+	date = substr(_infile_, 1, 10);
+	time = substr(_infile_, 12, 8);
+	text = substr(_infile_, find(_infile_, " - ") + 3);
+run;
+
+data logfile2;
+	infile "/opt/sas/Workshop/danePGDevOps/PD3/SASApp_STPServer_2020-01-28_sasapp_18318.log";
+	input @"WARN";
+	x = _infile_;
+	date = input(scan(x, 1, "T"), yymmdd10.);
+	time = input(scan(x, 2, "T,"), time8.);
+	text = substr(x, find(x, " - ") + 3);
+	format date yymmdd10. time time8.;
+	drop x;
+run;
